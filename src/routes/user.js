@@ -5,6 +5,5 @@ const {getRegister,postRegister,Verify} = require('../presentation/controller/us
 router.get('/',getRegister)
     .post('/',postRegister)
     .get('/login')
-    .get('/verify/:id',Verify)
 
 module.exports  = router

@@ -23,7 +23,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 const port = process.env.PORT || 3000
 app.listen(port,() => {
-    console.log(`Working on port:${port}`);
+    console.log(`Working on port:${port} 
+link:http://localhost:8080/`);
 })
 
 
