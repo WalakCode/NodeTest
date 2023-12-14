@@ -2,25 +2,29 @@ const session = require("express-session")
 const userService = require("../../business/services/user.services")
 
 const getRegister = (req,res) => {
-    if(req.session.authorized){
+    if(req.session.user){
         res.render('home')
     }else{
-        return res.render('login')
+        return res.render('index')
     }
-    
 }
 
 const postRegister = async(req,res) => {
-    const [user,code] = await userService.registerUser(req.body)   
-    // req.session.user = user;
-    // req.session.code = code
-    // req.session.authorized = true;
-    res.render('home');
+   const data = await userService.registerUser(req.body) 
+   if(data['error']){
+        res.json(data)
+   }else{
+    req.session.user = data
+    res.render('home')
+   }
 }
 
-
-const getLogin = async(req,res) =>{
-     res.render('login')
+const postVerify = async(req,res) =>{
+     if(req.session.user){
+        await userService.verifycode(req.session.user,req.body['code'])
+     }else{
+        res.render('login')
+     }
 }
 
 const postLogin = async(req,res) =>{
@@ -30,4 +34,5 @@ const postLogin = async(req,res) =>{
 module.exports = {
     getRegister,
     postRegister,
+    postVerify
 }
