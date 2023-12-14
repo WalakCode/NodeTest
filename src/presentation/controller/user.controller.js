@@ -1,4 +1,3 @@
-const session = require("express-session")
 const userService = require("../../business/services/user.services")
 
 const getRegister = (req,res) => {
@@ -10,29 +9,39 @@ const getRegister = (req,res) => {
 }
 
 const postRegister = async(req,res) => {
-   const data = await userService.registerUser(req.body) 
-   if(data['error']){
-        res.json(data)
+   const status = await userService.registerUser(req.body) 
+   if(status['error']){
+        res.json(status)
    }else{
-    req.session.user = data
+    req.session.user = status
     res.render('home')
    }
 }
 
 const postVerify = async(req,res) =>{
      if(req.session.user){
-        await userService.verifycode(req.session.user,req.body['code'])
+        const status = await userService.verifycode(req.session.user,req.body['code'])
+        if(status['error']){
+            res.json(status)
+        }else{
+            res.redirect('main')
+        }
      }else{
         res.render('login')
      }
 }
 
-const postLogin = async(req,res) =>{
-    const user = await userService.findUser(req.body)
+const getMain = async(req,res) =>{
+    if(req.session.user){
+        res.render('main')
+    }else{
+        return res.render('index')
+    }
 }
 
 module.exports = {
     getRegister,
     postRegister,
-    postVerify
+    postVerify,
+    getMain
 }

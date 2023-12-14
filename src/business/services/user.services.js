@@ -40,20 +40,22 @@ const verifycode = async (id,code) =>{
   const dateNow = new Date()
   const datecreated = getCode.rows[0]['datecreated']
 
-  if(dateNow - datecreated > 300000){
-    if(getCode.rows[0].code == code){
+  console.log(dateNow)
+  console.log(datecreated)
 
+  console.log(dateNow - datecreated)
+  if(dateNow - datecreated < 300000){
+    if(getCode.rows[0].code == code){
+      userRepository.updateVerificated([id])
+      userRepository.deleteCode([id])
+      return {auth:true}
     }else{
-      return {message:'codigo no coincide'}
+      return {error:'codigo no coincide'}
     }
   }else{
-    return {message:'codigo expirado '}
+    return {error:'codigo expirado '}
   }
 
-
-
-
- 
 }
 
 module.exports = {

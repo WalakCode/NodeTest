@@ -40,11 +40,31 @@ const getCode = async(data)=>{
     }
 }
 
+const deleteCode = async(data)=>{
+    try{
+        await db.query(`DELETE FROM public.verifycode where user_code = $1`,data)
+    }catch(error){
+        console.log(error)
+        return null
+    }
+}
+
+const updateVerificated = async(data)=>{
+    try{
+        await db.query(`UPDATE public.users SET verify=true  WHERE id = $1`,data)
+    }catch(error){
+        console.log(error)
+        return null
+    }
+}
+
 
 
 module.exports = {
     createUser,
     getUser,
     insertCode,
-    getCode
+    getCode,
+    deleteCode,
+    updateVerificated
 }
